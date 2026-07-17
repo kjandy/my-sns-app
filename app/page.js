@@ -18,6 +18,7 @@ export default function TopPage() {
             post={post}
             currentUserId={user.uid}
             key={post.id}
+            onAvatarClick={(useId) => router.push(`/profile/${useId}`)}
           />
         ))}
       </div>

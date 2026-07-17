@@ -2,22 +2,29 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 const getInitials = (name) => (name ? name.charAt(0).toUpperCase() : '?');
 
-export const PostRow = ({ post, currentUserId, onClick }) => {
+export const PostRow = ({ post, currentUserId, onClick, onAvatarClick }) => {
   const isOwnPost = post.userId === currentUserId;
-
+  const handleAvatarClick = (e) => {
+    if (!onAvatarClick) return;
+    e.stopPropagation();
+    onAvatarClick(post.userId);
+  };
   return (
     <article
       onClick={onClick}
       className={`flex gap-3 border-b p-4 transition-colors hover:bg-muted/40 md:p-8 cursor-pointer ${isOwnPost ? 'bg-primary/5' : ''}`}
     >
-      <Avatar className="size-10 shrink-0">
-        {post.userPhotoURL ? (
-          <AvatarImage src={post.userPhotoURL} alt={post.userName} />
-        ) : null}
-        <AvatarFallback className="bg-primary text-sm font-bold text-primary-foreground">
-          {getInitials(post.userName)}
-        </AvatarFallback>
-      </Avatar>
+      <button type="button" onClick={handleAvatarClick}>
+        <Avatar className="size-10 shrink-0">
+          {post.userPhotoURL ? (
+            <AvatarImage src={post.userPhotoURL} alt={post.userName} />
+          ) : null}
+          <AvatarFallback className="bg-primary text-sm font-bold text-primary-foreground">
+            {getInitials(post.userName)}
+          </AvatarFallback>
+        </Avatar>
+      </button>
+
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5 text-sm">
           <span className="truncate font-bold">{post.userName}</span>
