@@ -1,3 +1,5 @@
+'use client';
+
 import { dummyPosts } from '@/lib/learn/dummyData';
 import { useState } from 'react';
 
@@ -7,6 +9,7 @@ export const PostDetailClient = ({ postId }) => {
   return (
     <>
       <h1>投稿詳細ページ</h1>
+      <p>{post.userName}</p>
     </>
   );
 };

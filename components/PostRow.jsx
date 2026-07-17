@@ -2,11 +2,12 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 const getInitials = (name) => (name ? name.charAt(0).toUpperCase() : '?');
 
-export const PostRow = ({ post, currentUserId }) => {
+export const PostRow = ({ post, currentUserId, onClick }) => {
   const isOwnPost = post.userId === currentUserId;
 
   return (
     <article
+      onClick={onClick}
       className={`flex gap-3 border-b p-4 transition-colors hover:bg-muted/40 md:p-8 cursor-pointer ${isOwnPost ? 'bg-primary/5' : ''}`}
     >
       <Avatar className="size-10 shrink-0">
