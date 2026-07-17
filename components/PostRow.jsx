@@ -1,10 +1,14 @@
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 const getInitials = (name) => (name ? name.charAt(0).toUpperCase() : '?');
 
-export const PostRow = ({ post }) => {
+export const PostRow = ({ post, currentUserId }) => {
+  const isOwnPost = post.userId === currentUserId;
+
   return (
-    <article className="flex gap-3 border-b p-4 transition-colors hover:bg-muted/40 md:p-8 cursor-pointer">
+    <article
+      className={`flex gap-3 border-b p-4 transition-colors hover:bg-muted/40 md:p-8 cursor-pointer ${isOwnPost ? 'bg-primary/5' : ''}`}
+    >
       <Avatar className="size-10 shrink-0">
         {post.userPhotoURL ? (
           <AvatarImage src={post.userPhotoURL} alt={post.userName} />
@@ -18,6 +22,11 @@ export const PostRow = ({ post }) => {
           <span className="truncate font-bold">{post.userName}</span>
           <span className="text-muted-foreground">·</span>
           <span className="text-muted-foreground">2時間前</span>
+          {isOwnPost && (
+            <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
+              あなたの投稿
+            </span>
+          )}
         </div>
         <p className="mt-0.5 whitespace-pre-wrap wrap-break-word text-[15px]">
           {post.content}
