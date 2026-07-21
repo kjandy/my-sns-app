@@ -8,6 +8,7 @@ export const PostRow = ({ post, currentUserId, onClick, onAvatarClick }) => {
     if (!onAvatarClick) return;
     e.stopPropagation();
     onAvatarClick(post.userId);
+    // console.log(post.userId);
   };
   return (
     <article

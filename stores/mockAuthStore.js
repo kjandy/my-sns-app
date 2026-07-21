@@ -15,7 +15,8 @@ export const MOCK_USERS = [
     photoURL: '',
     bio: '毎日散歩するのが好きです。',
     location: '東京都',
-    bannerURL: '',
+    bannerURL:
+      'https://plus.unsplash.com/premium_photo-1784206736948-1ace6a2bb9b3?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     following: ['u2'],
   },
   {
