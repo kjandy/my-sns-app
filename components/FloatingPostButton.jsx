@@ -36,13 +36,17 @@ export const FloatingPostButton = () => {
     try {
       await addPost(
         user.uid,
-        user.email,
-        user.displayName,
-        user.photoURL,
+        user.email ?? '', // Null合体演算子：左側がnull or undifinedのときだけ、右側の値を使う
+        user.displayName ?? '', // Googleログイン等でemailがundeifendの場合に備え、空文字にフォールバック
+        user.photoURL ?? '',
         content
       );
     } catch (err) {
+      console.error(err);
     } finally {
+      setIsSubmitting(false);
+      setContent('');
+      setOpen(false);
     }
   };
   return (
