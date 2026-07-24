@@ -7,7 +7,7 @@ export const ClientLayout = ({ children }) => {
     <>
       {children}
       <FloatingPostButton />
-      {/* <DevUserSwitcher /> */}
+      <DevUserSwitcher />
     </>
   );
 };
