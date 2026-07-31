@@ -6,10 +6,13 @@ import React from 'react';
 export default function ZustandPage() {
   return (
     <main className="mx-auto min-h-screen max-w-2xl border-x px-4 py-10">
-      <p>
-        <Link href="/">TOPへ</Link>
-      </p>
-      <h1 className="text-2xl font-bold">Zustand 学習ページ</h1>
+      <Link
+        href="/learn/"
+        className="text-sm font-bold text-primary underline underline-offset-4"
+      >
+        ← /learn/に戻る
+      </Link>
+      <h1 className="mt-4 text-2xl font-bold">Zustand 学習ページ</h1>
       <p className="mt-2 text-muted-foreground">
         このページは、Zustandの一番シンプルな使い方を確認するための練習用ページです。
       </p>
