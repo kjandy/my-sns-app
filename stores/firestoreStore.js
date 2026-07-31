@@ -9,6 +9,8 @@ import { db } from '@/lib/firebase';
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   limit,
   onSnapshot,
   orderBy,
@@ -101,6 +103,23 @@ const useFirestoreStore = create((set, get) => ({
     );
 
     set({ timelineUnsubscribe: unsub });
+  },
+
+  // ==============================
+  // 投稿を1件取得（投稿詳細ページ用）
+  // ==============================
+  // 変更点: 投稿詳細ページ(PostDetailClient)は以前 dummyPosts配列をfindしていたが、
+  // タイムライン(TopPageClient)がFirestoreの実データを表示するようになったことで
+  // 渡ってくるIDがFirestoreドキュメントIDになり、dummyPostsとは一致しなくなった。
+  // そのため実データ取得用にgetDocベースの単体取得を新設。
+  getPost: async (postId) => {
+    const snap = await getDoc(doc(db, 'posts', postId));
+    if (!snap.exists()) return null;
+    return {
+      id: snap.id,
+      ...snap.data(),
+      createdAt: snap.data().createdAt?.toDate(),
+    };
   },
 
   // ==============================
