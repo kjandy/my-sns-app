@@ -25,6 +25,12 @@ export default function LearnPage() {
         >
           → 2.firestoreの基本（crud処理）
         </Link>
+        <Link
+          href="/learn/auth/"
+          className="my-3 block text-md font-bold text-primary underline underline-offset-4"
+        >
+          → 3.firebase Authenticationの基本
+        </Link>
       </div>
       <div>
         {posts.map((post) => (

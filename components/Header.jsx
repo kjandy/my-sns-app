@@ -50,6 +50,7 @@ export default function Header() {
   // if (loading) return null;
 
   // const hasUnread = user ? hasUnreadMessages(conversations, user.uid) : false;
+  const hasUnread = false;
 
   // アイコンの右上に小さい丸バッジを重ねる（未読メッセージがある時だけ）
   const iconWithBadge = (Icon, size, showBadge) => (
@@ -149,9 +150,9 @@ export default function Header() {
             <>
               {/* ホーム/プロフィールはPC表示のみ。モバイルはMobileNav(下部固定)に移動 */}
               <div className="hidden items-center gap-1 md:flex">
-                {/* {navItem('/', 'ホーム', Home)}
+                {navItem('/', 'ホーム', Home)}
                 {navItem(`/profile/${user.uid}`, 'プロフィール', User)}
-                {navItem('/messages', 'メッセージ', Mail, hasUnread)} */}
+                {navItem('/messages', 'メッセージ', Mail, hasUnread)}
               </div>
 
               <div className="ml-2 flex items-center gap-1 border-l pl-2">
@@ -223,10 +224,10 @@ export default function Header() {
           </SheetHeader>
 
           <nav className="flex flex-col gap-1 px-2">
-            {/* {menuLink('/', 'ホーム', Home)}
+            {menuLink('/', 'ホーム', Home)}
             {user && menuLink(`/profile/${user.uid}`, 'プロフィール', User)}
             {user && menuLink('/messages', 'メッセージ', Mail, hasUnread)}
-            {menuSearchPlaceholder} */}
+            {menuSearchPlaceholder}
           </nav>
 
           <SheetFooter>
