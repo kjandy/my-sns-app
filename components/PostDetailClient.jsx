@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { PostRow } from './PostRow';
-import { useMockAuthStore } from '@/stores/mockAuthStore';
+// import { useMockAuthStore } from '@/stores/mockAuthStore';
 import useFirestoreStore from '@/stores/firestoreStore';
+import useAuthStore from '@/stores/authStore';
 
 export const PostDetailClient = ({ postId }) => {
   // 変更点: 以前は dummyPosts（id: '1'〜'3'固定）を posts.find(p => p.id === postId) で検索していたが、
@@ -13,7 +14,21 @@ export const PostDetailClient = ({ postId }) => {
   // dummyPostsのidとは一致しないため post が undefined になり、
   // PostRow内の post.userId 参照でランタイムエラーになっていた。
   // → firestoreStoreに追加した getPost(postId) でFirestoreから該当ドキュメントを直接取得する方式に変更。
-  const { getPost } = useFirestoreStore();
+  const {
+    currentPost,
+    currentPostLoading,
+    comments,
+    commentsLoading,
+    subscribeToPost,
+    unsubscribeFromPost,
+    subscribeToComments,
+    unsubscribeFromComments,
+    addComment,
+    deleteComment,
+    deletePost,
+    toggleCommentLike,
+    toggleCommentBad,
+  } = useFirestoreStore();
   // fetchedId が postId と一致していない間は読み込み中とみなす
   // （以前はdummyPostsを同期的にuseStateへ入れていたため読み込み状態は不要だったが、
   // 　非同期取得になったことで loading / not-found の状態管理が必要になった）
@@ -21,21 +36,16 @@ export const PostDetailClient = ({ postId }) => {
     fetchedId: null,
     post: null,
   });
-  const { user } = useMockAuthStore();
+  // const { user } = useMockAuthStore();
+  const { user } = useAuthStore();
 
   // 投稿IDが変わるたびにFirestoreから該当の1件を取得する
   useEffect(() => {
-    let ignore = false;
-    getPost(postId).then((result) => {
-      if (ignore) return;
-      setResult({ fetchedId: postId, post: result });
-    });
+    subscribeToPost(postId);
     return () => {
-      ignore = true;
+      unsubscribeFromPost();
     };
-  }, [postId, getPost]);
-
-  const loading = fetchedId !== postId;
+  }, [postId]);
 
   return (
     <main className="mx-auto min-h-screen max-w-2xl border-x">
@@ -47,14 +57,14 @@ export const PostDetailClient = ({ postId }) => {
           ← タイムラインに戻る
         </Link>
       </div>
-      {loading ? (
+      {currentPostLoading ? (
         <div className="p-4 text-sm text-muted-foreground">読み込み中...</div>
-      ) : post ? (
-        <PostRow post={post} currentUserId={user.uid} />
-      ) : (
+      ) : currentPost === null ? (
         <div className="p-4 text-sm text-muted-foreground">
           投稿が見つかりませんでした。
         </div>
+      ) : (
+        <PostRow post={currentPost} />
       )}
 
       <div className="p-4 text-sm text-muted-foreground">

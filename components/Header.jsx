@@ -4,7 +4,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-// import useAuthStore from '@/stores/authStore';
+import useAuthStore from '@/stores/authStore';
 import { useMockAuthStore } from '@/stores/mockAuthStore';
 
 // import useDmStore, { hasUnreadMessages } from '@/stores/dmStore';
@@ -22,24 +22,24 @@ import { Home, User, LogOut, Search, Mail } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Header() {
-  // const { user, loading, signOut } = useAuthStore();
-  const { user } = useMockAuthStore();
+  const { user, loading, signOut } = useAuthStore();
+  // const { user } = useMockAuthStore();
   // const { conversations } = useDmStore();
   const router = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
-    // const result = await signOut();
-    // if (!result.success) {
-    //   // Cookie削除に失敗した場合はログイン状態のままなので、
-    //   // メニューを閉じたり/へ遷移したりせず、その場でエラーを伝える。
-    //   // （stores/authStore.jsのsignOut()コメント参照）
-    //   window.alert(result.error);
-    //   return;
-    // }
-    // setMenuOpen(false);
-    // router.push('/');
+    const result = await signOut();
+    if (!result.success) {
+      // Cookie削除に失敗した場合はログイン状態のままなので、
+      // メニューを閉じたり/へ遷移したりせず、その場でエラーを伝える。
+      // （stores/authStore.jsのsignOut()コメント参照）
+      window.alert(result.error);
+      return;
+    }
+    setMenuOpen(false);
+    router.push('/');
   };
 
   const getInitials = (email) => {
@@ -47,7 +47,7 @@ export default function Header() {
     return email.charAt(0).toUpperCase();
   };
 
-  // if (loading) return null;
+  if (loading) return null;
 
   // const hasUnread = user ? hasUnreadMessages(conversations, user.uid) : false;
   const hasUnread = false;
@@ -168,7 +168,7 @@ export default function Header() {
                 <Button
                   variant="ghost"
                   size="icon-lg"
-                  // onClick={handleSignOut}
+                  onClick={handleSignOut}
                   aria-label="ログアウト"
                 >
                   <LogOut className="size-6" />
@@ -235,7 +235,7 @@ export default function Header() {
               <Button
                 variant="outline"
                 className="justify-start gap-3"
-                // onClick={handleSignOut}
+                onClick={handleSignOut}
               >
                 <LogOut className="size-4" />
                 ログアウト

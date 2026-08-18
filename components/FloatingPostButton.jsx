@@ -17,11 +17,13 @@ import {
 } from './ui/dialog';
 import { Label } from './ui/label';
 import { useState } from 'react';
-import { useMockAuthStore } from '@/stores/mockAuthStore';
+// import { useMockAuthStore } from '@/stores/mockAuthStore';
 import useFirestoreStore from '@/stores/firestoreStore';
+import useAuthStore from '@/stores/authStore';
 
 export const FloatingPostButton = () => {
-  const { user } = useMockAuthStore();
+  // const { user } = useMockAuthStore();
+  const { user } = useAuthStore();
   const { addPost } = useFirestoreStore();
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState('');

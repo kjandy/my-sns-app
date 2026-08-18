@@ -2,6 +2,7 @@ import { useMockAuthStore } from '@/stores/mockAuthStore';
 import { ReactionButtons } from './ReactionButtons';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import useFirestoreStore from '@/stores/firestoreStore';
+import { cn, formatRelativeTime } from '@/lib/utils';
 
 const getInitials = (name) => (name ? name.charAt(0).toUpperCase() : '?');
 
@@ -52,8 +53,17 @@ export const PostRow = ({ post, currentUserId, onClick, onAvatarClick }) => {
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5 text-sm">
           <span className="truncate font-bold">{post.userName}</span>
-          <span className="text-muted-foreground">·</span>
-          <span className="text-muted-foreground">2時間前</span>
+          {/* createdAt は serverTimestamp() で書き込んだ直後の一瞬だけ
+              まだnullのことがある（サーバー側で時刻が確定する前）。
+              そのため「値があるときだけ」表示する。 */}
+          {post.createdAt && (
+            <>
+              <span className="text-muted-foreground">·</span>
+              <span className="text-muted-foreground">
+                {formatRelativeTime(post.createdAt)}
+              </span>
+            </>
+          )}
           {isOwnPost && (
             <span className="rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground">
               あなたの投稿

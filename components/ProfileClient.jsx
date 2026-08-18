@@ -4,19 +4,33 @@ import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { div, p } from 'motion/react-client';
 import { MapPin } from 'lucide-react';
-import { MOCK_USERS, useMockAuthStore } from '@/stores/mockAuthStore';
-import { dummyPosts } from '@/lib/learn/dummyData';
+// import { MOCK_USERS, useMockAuthStore } from '@/stores/mockAuthStore';
+// import { dummyPosts } from '@/lib/learn/dummyData';
 import { PostRow } from './PostRow';
 import { useRouter } from 'next/navigation';
+import useAuthStore from '@/stores/authStore';
+import useFirestoreStore from '@/stores/firestoreStore';
 
 const getInitials = (name) => (name ? name.charAt(0).toUpperCase() : '?');
 
 export const ProfileClient = ({ uid }) => {
-  const [users, setUsers] = useState(MOCK_USERS);
-  const [posts, setPosts] = useState(dummyPosts);
-  const profileUser = users.find((u) => u.uid === uid);
-  const userPosts = posts.filter((p) => p.userId === uid);
-  const { user } = useMockAuthStore();
+  // const [users, setUsers] = useState(MOCK_USERS);
+  // const [posts, setPosts] = useState(dummyPosts);
+  // const profileUser = users.find((u) => u.uid === uid);
+  // const userPosts = posts.filter((p) => p.userId === uid);
+  // const { user } = useMockAuthStore();
+  const { user } = useAuthStore();
+  const {
+    profileUser,
+    profileUserLoading,
+    subscribeToProfileUser,
+    unsubscribeFromProfileUser,
+    posts,
+    // loading: postsLoading,
+    loading: timelineLoading,
+    subscribeToUserPosts,
+    unsubscribeFromPosts,
+  } = useFirestoreStore();
   const router = useRouter();
   return (
     <main className="mx-auto min-h-screen max-w-4xl border-x">
