@@ -1,15 +1,37 @@
+import { useMockAuthStore } from '@/stores/mockAuthStore';
 import { ReactionButtons } from './ReactionButtons';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import useFirestoreStore from '@/stores/firestoreStore';
 
 const getInitials = (name) => (name ? name.charAt(0).toUpperCase() : '?');
 
 export const PostRow = ({ post, currentUserId, onClick, onAvatarClick }) => {
+  const { user } = useMockAuthStore();
+  const { toggleLike, toggleBad } = useFirestoreStore();
   const isOwnPost = post.userId === currentUserId;
   const handleAvatarClick = (e) => {
     if (!onAvatarClick) return;
     e.stopPropagation();
     onAvatarClick(post.userId);
     // console.log(post.userId);
+  };
+  // ReactionButtonsから「押す前の状態(isLiked)」が渡ってくるので
+  // それをそのままFirestore側のトグル処理へ受け渡す
+  const handleToggleLike = async (isLiked) => {
+    if (!user) return;
+    try {
+      await toggleLike(post.id, user.uid, isLiked);
+    } catch (error) {
+      console.error('Like error', error);
+    }
+  };
+  const handleToggleBad = async (isBad) => {
+    if (!user) return;
+    try {
+      await toggleBad(post.id, user.uid, isBad);
+    } catch (error) {
+      console.error('Bad error', error);
+    }
   };
   return (
     <article
@@ -42,7 +64,13 @@ export const PostRow = ({ post, currentUserId, onClick, onAvatarClick }) => {
           {post.content}
         </p>
         <div className="mt-2 -ml-1.5 flex items-center gap-4">
-          <ReactionButtons />
+          <ReactionButtons
+            likedBy={post.likedBy || []}
+            badBy={post.badBy || []}
+            currentUserId={user?.uid}
+            onToggleLike={handleToggleLike}
+            onToggleBad={handleToggleBad}
+          />
           <div className="flex items-center gap-1.5 rounded-full px-1.5 py-1 text-sm text-muted-foreground">
             <span>5 コメント</span>
           </div>
