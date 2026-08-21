@@ -1,19 +1,22 @@
-import { useMockAuthStore } from '@/stores/mockAuthStore';
-import { ReactionButtons } from './ReactionButtons';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import useFirestoreStore from '@/stores/firestoreStore';
-import { cn, formatRelativeTime } from '@/lib/utils';
+import { useMockAuthStore } from "@/stores/mockAuthStore";
+import { ReactionButtons } from "./ReactionButtons";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import useFirestoreStore from "@/stores/firestoreStore";
+import { cn, formatRelativeTime } from "@/lib/utils";
+import useAuthStore from "@/stores/authStore";
+import { useRouter } from "next/navigation";
 
-const getInitials = (name) => (name ? name.charAt(0).toUpperCase() : '?');
+const getInitials = (name) => (name ? name.charAt(0).toUpperCase() : "?");
 
-export const PostRow = ({ post, currentUserId, onClick, onAvatarClick }) => {
-  const { user } = useMockAuthStore();
+export const PostRow = ({ post, currentUserId, onClick }) => {
+  // const { user } = useMockAuthStore();
+  const { user } = useAuthStore();
+  const router = useRouter();
   const { toggleLike, toggleBad } = useFirestoreStore();
   const isOwnPost = post.userId === currentUserId;
-  const handleAvatarClick = (e) => {
-    if (!onAvatarClick) return;
+  const handleGoToProfile = (e) => {
     e.stopPropagation();
-    onAvatarClick(post.userId);
+    router.push(`/profile/${post.userId}`);
     // console.log(post.userId);
   };
   // ReactionButtonsから「押す前の状態(isLiked)」が渡ってくるので
@@ -23,7 +26,7 @@ export const PostRow = ({ post, currentUserId, onClick, onAvatarClick }) => {
     try {
       await toggleLike(post.id, user.uid, isLiked);
     } catch (error) {
-      console.error('Like error', error);
+      console.error("Like error", error);
     }
   };
   const handleToggleBad = async (isBad) => {
@@ -31,15 +34,15 @@ export const PostRow = ({ post, currentUserId, onClick, onAvatarClick }) => {
     try {
       await toggleBad(post.id, user.uid, isBad);
     } catch (error) {
-      console.error('Bad error', error);
+      console.error("Bad error", error);
     }
   };
   return (
     <article
       onClick={onClick}
-      className={`flex gap-3 border-b p-4 transition-colors hover:bg-muted/40 md:p-8 cursor-pointer ${isOwnPost ? 'bg-primary/5' : ''}`}
+      className={`flex gap-3 border-b p-4 transition-colors hover:bg-muted/40 md:p-8 cursor-pointer ${isOwnPost ? "bg-primary/5" : ""}`}
     >
-      <button type="button" onClick={handleAvatarClick}>
+      <button type="button" onClick={handleGoToProfile}>
         <Avatar className="size-10 shrink-0">
           {post.userPhotoURL ? (
             <AvatarImage src={post.userPhotoURL} alt={post.userName} />
